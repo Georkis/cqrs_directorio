@@ -32,12 +32,12 @@ class CargoExceptionsDocs extends AbstractDocsExceptions
         $this->addError(
             classname: CargoNotExistException::class,
             status: Response::HTTP_UNPROCESSABLE_ENTITY,
-            description: "Cargo is not valid"
+            description: "Cargo is not Exist"
         );
     }
 
     protected function baseError(): string
     {
-        return "PET";
+        return "CARGO";
     }
 }

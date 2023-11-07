@@ -124,7 +124,7 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
         $this->cargos;
     }
 
-    public function avatar(): string
+    public function avatar(): ?string
     {
         return $this->avatar;
     }

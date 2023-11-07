@@ -28,7 +28,8 @@ class UserController extends AbstractAPIController
                 password: (string)$this->params->get("password"),
                 birthdate: (string)$this->params->get("birthdate"),
                 gender: (string)$this->params->get("gender"),
-                cargos: (array)$this->params->get("cargos")
+                cargos: (array)$this->params->get("cargos"),
+                avatar: (string)$this->params->get("avatar")
             )
         );
     }
@@ -101,6 +102,6 @@ class UserController extends AbstractAPIController
     #[Route(path: '/api/app/user/info', name: 'api_app_user_info'), ApiAnnotation(secure: true)]
     public function infoUser(): void
     {
-
+        //todo
     }
 }

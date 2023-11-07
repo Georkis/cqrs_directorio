@@ -33,6 +33,8 @@ final class RegisterUserCommand
     #[Assert\NotBlank]
     private array $cargos;
 
+    private $avatar = null;
+
     /**
      * RegisterUserCommand constructor.
      * @param UuidInterface $id
@@ -50,6 +52,7 @@ final class RegisterUserCommand
         string $birthdate,
         string $gender,
         array $cargos,
+        string $avatar
     )
     {
         $this->id = $id;
@@ -59,6 +62,7 @@ final class RegisterUserCommand
         $this->birthdate = $birthdate;
         $this->gender = (string)mb_strtoupper($gender);
         $this->cargos = $cargos;
+        $this->avatar = $avatar;
     }
 
     public function gender(): Gender
@@ -100,5 +104,10 @@ final class RegisterUserCommand
         }
 
         return $r;
+    }
+
+    public function avatar(): ?string
+    {
+        return $this->avatar;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Application\Service\User\RegisterUser;
 
 use App\Application\Exception\CargoIsExistException;
+use App\Application\Exception\CargoNotExistException;
 use App\Application\Exception\UserEmailAlreadyRegisteredException;
 use App\Domain\Entity\User;
 use App\Domain\Exception\UserStatusNotValidException;
@@ -45,7 +46,7 @@ final class RegisterUser
 
         foreach ($command->cargos() as $cargoId){
             if(!$cargo = $this->cargoRepository->byId($cargoId)){
-                throw new CargoIsExistException();
+                throw new CargoNotExistException();
             }
 
             $cargos->add($cargo);
@@ -59,6 +60,7 @@ final class RegisterUser
             birthdate: $command->birthdate(),
             gender: $command->gender(),
             cargos: $cargos,
+            avatar: $command->avatar()
         );
 
         $hashedPassword = $this->passwordHasher->hashPassword(

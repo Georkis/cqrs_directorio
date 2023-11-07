@@ -8,7 +8,7 @@
         <field name="name"/>
         <field name="password"/>
         <field name="birthdate" type="date_immutable" />
-        <field name="avatar" type="string" />
+        <field name="avatar" type="string" nullable="true" />
         <embedded
                 name="gender"
                 class="App\Domain\ValueObject\Gender"

@@ -1,0 +1,22 @@
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+  App\Domain\Manager\UploadFileManager:
+    class: App\Infrastructure\Manager\S3
+    arguments:
+      $bucket: '%env(string:AWS_S3_BUCKET)%'
+      $tmpFolder: '%env(string:TMP_FOLDER)%'
+
+  App\Domain\Manager\TokenManager:
+    class: App\Infrastructure\Manager\JWTTokenManager
+    arguments:
+      $key: '%env(string:JWT_KEY)%'
+      $algorithm: '%env(string:JWT_ALGORITHM)%'
+      $iss: '%env(string:JWT_ISS)%'
+
+  App\Domain\Manager\ResetPasswordTokenManager:
+    class: App\Infrastructure\Manager\JWTResetPasswordTokenManager
+    arguments:
+      $key: '%env(string:JWT_KEY)%'
+      $algorithm: '%env(string:JWT_ALGORITHM)%'

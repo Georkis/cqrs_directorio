@@ -1,0 +1,6 @@
+App\Domain\Entity\AbstractUuidEntity:
+  exclusion_policy: ALL
+  properties:
+    id:
+      type: uuid
+      groups: [default]

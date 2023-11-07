@@ -1,0 +1,18 @@
+App\Domain\Entity\User:
+  exclusion_policy: ALL
+  properties:
+    email:
+      groups: [ default ]
+    name:
+      groups: [ default ]
+    birthdate:
+      groups: [ default ]
+      type: DateTimeImmutable<'Y-m-d'>
+    gender:
+      groups: [ default ]
+      inline: true
+    status:
+      groups: [ default ]
+      inline: true
+    cargos:
+      groups: [ default ]

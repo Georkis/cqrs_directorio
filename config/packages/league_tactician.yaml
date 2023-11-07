@@ -1,0 +1,39 @@
+# Library documentation: http://tactician.thephpleague.com/
+# Bundle documentation: https://github.com/thephpleague/tactician-bundle/blob/v1.0/README.md
+tactician:
+    commandbus:
+        default:
+            middleware:
+                # Locking middleware - http://tactician.thephpleague.com/plugins/locking-middleware/
+                - tactician.middleware.locking
+                - SecurityMiddleware
+                - App\Infrastructure\Middleware\ApiResponseMiddleware
+                # https://github.com/thephpleague/tactician-logger
+                - tactician.middleware.logger
+                # Validator middleware - https://github.com/thephpleague/tactician-bundle/tree/v1.0#validator-middleware-tacticianmiddlewarevalidator
+                - tactician.middleware.validator
+                # Doctrine transactional middleware, requires additional package - https://github.com/thephpleague/tactician-doctrine
+                - tactician.middleware.doctrine
+                - App\Infrastructure\Middleware\DomainEventsMiddleware
+                - tactician.middleware.command_handler
+        query:
+            middleware:
+                - tactician.middleware.locking
+                - SecurityMiddleware
+                - App\Infrastructure\Middleware\ApiResponseMiddleware
+                - tactician.middleware.logger
+                - tactician.middleware.validator
+                - tactician.middleware.command_handler
+        console:
+            middleware:
+                # Locking middleware - http://tactician.thephpleague.com/plugins/locking-middleware/
+                - tactician.middleware.locking
+                - App\Infrastructure\Middleware\ConsoleResponseMiddleware
+                # https://github.com/thephpleague/tactician-logger
+                - tactician.middleware.logger
+                # Validator middleware - https://github.com/thephpleague/tactician-bundle/tree/v1.0#validator-middleware-tacticianmiddlewarevalidator
+                - tactician.middleware.validator
+                # Doctrine transactional middleware, requires additional package - https://github.com/thephpleague/tactician-doctrine
+                - tactician.middleware.doctrine
+                - App\Infrastructure\Middleware\DomainEventsMiddleware
+                - tactician.middleware.command_handler

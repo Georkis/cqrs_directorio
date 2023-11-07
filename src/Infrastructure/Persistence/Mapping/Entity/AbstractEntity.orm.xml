@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="App\Domain\Entity\AbstractEntity">
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="updatedTimestamps"/>
+            <lifecycle-callback type="preUpdate" method="updatedTimestamps"/>
+            <lifecycle-callback type="prePersist" method="triggerEventCreated"/>
+            <lifecycle-callback type="preUpdate" method="triggerEventUpdated"/>
+        </lifecycle-callbacks>
+    </mapped-superclass>
+</doctrine-mapping>

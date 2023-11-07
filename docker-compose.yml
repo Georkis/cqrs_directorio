@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: ./Dockerfile
+    #    entrypoint: ./docker/php/entrypoint.sh
+    depends_on:
+      - mysql
+      - rabbitmq
+    volumes:
+      - ./:/var/www/html
+    restart: "on-failure"
+    networks:
+      - app-network
+    ports:
+      - ${SUPERVIOSR_ADMIN_PORT:-9001}:9001
+      - ${HTTP_PORT:-8080}:80
+  mysql:
+    build:
+      context: ./docker/mysql
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - ${MYSQL_PORT:-3306}:3306
+    restart: "on-failure"
+    networks:
+      - app-network
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+      - app-network
+    ports:
+      - ${RABBITMQ_PORT:-5672}:5672
+      - ${RABBITMQ_ADMIN_PORT:-15672}:15672
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge

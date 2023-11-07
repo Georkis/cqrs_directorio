@@ -1,0 +1,29 @@
+jms_serializer:
+    visitors:
+        xml_serialization:
+            format_output: '%kernel.debug%'
+    metadata:
+        directories:
+            Entity:
+                namespace_prefix: "App\\Domain\\Entity"
+                path: "%kernel.project_dir%/src/Infrastructure/Serialize/Mapping/Entity"
+            ValueObject:
+                namespace_prefix: "App\\Domain\\ValueObject"
+                path: "%kernel.project_dir%/src/Infrastructure/Serialize/Mapping/ValueObject"
+
+when@prod:
+    jms_serializer:
+        visitors:
+            json_serialization:
+                options:
+                    - JSON_UNESCAPED_SLASHES
+                    - JSON_PRESERVE_ZERO_FRACTION
+
+when@dev:
+    jms_serializer:
+        visitors:
+            json_serialization:
+                options:
+                    - JSON_PRETTY_PRINT
+                    - JSON_UNESCAPED_SLASHES
+                    - JSON_PRESERVE_ZERO_FRACTION

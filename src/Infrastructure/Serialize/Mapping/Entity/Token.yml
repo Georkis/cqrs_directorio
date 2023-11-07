@@ -1,0 +1,13 @@
+App\Domain\Entity\Token:
+  exclusion_policy: ALL
+  properties:
+    token:
+      groups: [default]
+    iss:
+      groups: [ default ]
+    aud:
+      groups: [ default ]
+    iat:
+      groups: [ default ]
+    exp:
+      groups: [ default ]

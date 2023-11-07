@@ -1,0 +1,5 @@
+App\Domain\Entity\Cargo:
+  exclusion_policy: ALL
+  properties:
+    name:
+      groups: [ default ]

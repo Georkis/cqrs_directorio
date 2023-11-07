@@ -1,0 +1,6 @@
+FROM mysql:8.0.32-debian
+
+ENV MYSQL_ROOT_PASSWORD=rootpassword
+ENV MYSQL_DATABASE=localdatabase
+ENV MYSQL_USER=dbuser
+ENV MYSQL_PASSWORD=dbpass

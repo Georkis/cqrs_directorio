@@ -1,0 +1,173 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+  APP_ENV: '%env(resolve:APP_ENV)%'
+  APP_TIMEZONE: '%env(APP_TIMEZONE)%'
+  TEMP_DIR: '%env(string:TEMP_DIR)%'
+  AMQP_HOST: '%env(resolve:AMQP_HOST)%'
+  AMQP_PORT: '%env(resolve:AMQP_PORT)%'
+  AMQP_USER: '%env(resolve:AMQP_USER)%'
+  AMQP_PASSWORD: '%env(resolve:AMQP_PASSWORD)%'
+  AMQP_VHOST: '%env(resolve:AMQP_VHOST)%'
+  EVENT_PHP_EXECUTABLE: '%env(resolve:EVENT_PHP_EXECUTABLE)%'
+  EVENT_CONSOLE_BIN_PATH: '%env(resolve:EVENT_CONSOLE_BIN_PATH)%'
+  MAIL_FROM_ADDRESS: '%env(resolve:MAIL_FROM_ADDRESS)%'
+  MAIL_FROM_NAME: '%env(resolve:MAIL_FROM_NAME)%'
+  RESET_PASSWORD_URL: '%env(resolve:RESET_PASSWORD_URL)%'
+  SENDGRID_API_KEY: '%env(resolve:SENDGRID_API_KEY)%'
+  SENDGRID_TEMPLATE_RESET_PASSWORD: '%env(resolve:SENDGRID_TEMPLATE_RESET_PASSWORD)%'
+  twilio_number: '%env(TWILIO_NUMBER)%'
+imports:
+  - { resource: "managers.yaml" }
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones
+
+  App\Application\Service\:
+    resource: "../src/Application/Service"
+    tags:
+      - { name: tactician.handler, typehints: true }
+
+  App\Application\Query\:
+    resource: "../src/Application/Query"
+    tags:
+      - { name: tactician.handler, typehints: true }
+
+  App\Infrastructure\Console\:
+    resource: "../src/Infrastructure/Console"
+    arguments:
+      - "@tactician.commandbus.console"
+    tags: [ "console.command" ]
+
+  App\Infrastructure\Event\Handler\Handlers\:
+    resource: "../src/Infrastructure/Event/Handler/Handlers"
+    arguments:
+      - "@tactician.commandbus.console"
+      - "%APP_ENV%"
+    tags:
+      - { name: app.event_handlers, typehints: true }
+
+  App\Infrastructure\Event\Producer\Producers\:
+    resource: "../src/Infrastructure/Event/Producer/Producers"
+    tags:
+      - { name: app.event_producers, typehints: true }
+
+  App\Infrastructure\Exceptions\ApiCodeExceptions:
+    class: App\Infrastructure\Exceptions\ApiCodeExceptions
+    arguments:
+      - !tagged_iterator app.apicodes
+
+  App\Infrastructure\Exceptions\Docs\:
+    resource: '../src/Infrastructure/Exceptions/Docs'
+    tags: [ 'app.apicodes' ]
+
+  tactician.middleware.logger:
+    class: League\Tactician\Logger\LoggerMiddleware
+
+  League\Tactician\Logger\Formatter\Formatter:
+    class: League\Tactician\Logger\Formatter\ClassNameFormatter
+
+  Mhujer\JmsSerializer\Uuid\UuidSerializerHandler:
+    tags:
+      - { name: jms_serializer.subscribing_handler }
+
+  PhpAmqpLib\Connection\AMQPStreamConnection:
+    class: PhpAmqpLib\Connection\AMQPStreamConnection
+    arguments:
+      - '%AMQP_HOST%'
+      - '%AMQP_PORT%'
+      - '%AMQP_USER%'
+      - '%AMQP_PASSWORD%'
+      - '%AMQP_VHOST%'
+
+  App\Application\EventConsumerLoggerInterface:
+    class: App\Infrastructure\Event\BasicEventConsumerLogger
+
+  App\Application\Service\Event\EventConsumer\EventConsumer:
+    class: App\Application\Service\Event\EventConsumer\EventConsumer
+    arguments:
+      $phpExecutable: '%EVENT_PHP_EXECUTABLE%'
+      $consoleBinPath: '%EVENT_CONSOLE_BIN_PATH%'
+    tags:
+      - { name: tactician.handler, typehints: true }
+
+  App\Infrastructure\Event\Handler\HandleEvents:
+    class: App\Infrastructure\Event\Handler\HandleEvents
+    arguments:
+      - !tagged_iterator app.event_handlers
+
+  App\Infrastructure\Event\Producer\ProducerQueues:
+    class: App\Infrastructure\Event\Producer\ProducerQueues
+    arguments:
+      - !tagged_iterator app.event_producers
+
+  App\Infrastructure\Response\ApiExceptionSubscriber:
+    arguments:
+      $env: "%APP_ENV%"
+
+  App\Infrastructure\Middleware\ApiResponseMiddleware:
+    class: App\Infrastructure\Middleware\ApiResponseMiddleware
+    arguments:
+      $env: "%APP_ENV%"
+
+  SecurityMiddleware:
+    class: App\Infrastructure\Middleware\SecurityMiddleware
+
+  App\Application\Service\Mail\AbstractSendMailService:
+    abstract: true
+    arguments:
+      $sendgridApiKey: '%SENDGRID_API_KEY%'
+      $sender: '%MAIL_FROM_ADDRESS%'
+      $senderName: '%MAIL_FROM_NAME%'
+      $env: '%APP_ENV%'
+      $devDomains:
+        - '@@maxlu.app'
+        - '@@mutter.me'
+
+  App\Application\Service\Mail\User\SendResetPasswordUserMail\SendResetPasswordUserMail:
+    parent: App\Application\Service\Mail\AbstractSendMailService
+    tags:
+      - { name: tactician.handler, typehints: true }
+    arguments:
+      $template: '%SENDGRID_TEMPLATE_RESET_PASSWORD%'
+      $resetPasswordUrl: '%RESET_PASSWORD_URL%'
+
+  # App
+  App\Infrastructure\Controller\API\App\:
+    resource: "../src/Infrastructure/Controller/API/App"
+    tags: [ "controller.service_arguments" ]
+    arguments:
+      $command: "@tactician.commandbus.default"
+      $query: "@tactician.commandbus.query"
+
+  #Symfony Style Console
+  App\Application\Console\SymfonyStyleFactory: ~
+
+  Symfony\Component\Console\Style\SymfonyStyle:
+    factory: ['@App\Application\Console\SymfonyStyleFactory', 'create']
+
+  twilio.client:
+    class: Twilio\Rest\Client
+    arguments: [ '%env(TWILIO_ACCOUNT_SID)%', '%env(TWILIO_AUTH_TOKEN)%' ]
+
+  Twilio\Rest\Client: '@twilio.client'
+
+

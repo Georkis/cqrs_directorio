@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Infrastructure\Repository\DoctrineUserRepository"
+            name="App\Domain\Entity\User" table="user">
+        <field name="email" unique="true"/>
+        <field name="name"/>
+        <field name="password"/>
+        <field name="birthdate" type="date_immutable" />
+        <field name="avatar" type="string" />
+        <embedded
+                name="gender"
+                class="App\Domain\ValueObject\Gender"
+                use-column-prefix="false"
+        />
+        <embedded
+                name="status"
+                class="App\Domain\ValueObject\UserStatus"
+                use-column-prefix="false"
+        />
+
+        <many-to-many field="cargos" target-entity="Cargo" inversed-by="users">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

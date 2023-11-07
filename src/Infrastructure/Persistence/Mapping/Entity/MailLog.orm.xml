@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="App\Infrastructure\Repository\DoctrineMailLogRepository"
+            name="App\Domain\Entity\MailLog" table="mail_log">
+
+        <field name="template" type="string" nullable="false"/>
+        <field name="recipient" type="string" nullable="false"/>
+        <field name="name" type="string" nullable="false"/>
+        <field name="sender" type="string" nullable="false"/>
+        <field name="senderName" type="string" nullable="false"/>
+
+        <embedded
+                name="type"
+                class="App\Domain\ValueObject\MailType"
+                use-column-prefix="false"
+        />
+
+    </entity>
+</doctrine-mapping>

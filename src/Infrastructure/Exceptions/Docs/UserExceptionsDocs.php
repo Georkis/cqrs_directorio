@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Exceptions\Docs;
 
+use App\Application\Exception\SocialRedIsExistException;
 use App\Application\Exception\UserEmailAlreadyRegisteredException;
 use App\Application\Exception\UserNotAccessException;
 use App\Application\Exception\UserNotExistExceptionException;
@@ -21,13 +22,19 @@ class UserExceptionsDocs extends AbstractDocsExceptions
         $this->addError(
             UserNotExistExceptionException::class,
             Response::HTTP_BAD_REQUEST,
-            "User not exists"
+            "User not exists",
         );
 
         $this->addError(
             UserNotAccessException::class,
             Response::HTTP_FORBIDDEN,
             "User can not access"
+        );
+
+        $this->addError(
+            classname: SocialRedIsExistException::class,
+            status: Response::HTTP_UNPROCESSABLE_ENTITY,
+            description: "Social red is exist!"
         );
     }
 

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller\API\App;
 
 use App\Application\Service\Mail\User\SendResetPasswordUserMail\SendResetPasswordUserMailCommand;
+use App\Application\Service\User\AddSocialRed\SocialRedCommand;
 use App\Application\Service\User\GetTokenUser\GetTokenUserCommand;
 use App\Application\Query\User\GetUser\GetUserCommand;
 use App\Application\Query\User\LoginUser\LoginUserCommand;
@@ -95,6 +96,18 @@ class UserController extends AbstractAPIController
             new UpdateUserCargosCommand(
                 id: $this->tokenManager->requestToken() ? Uuid::fromString($this->tokenManager->requestToken()->aud()) : "",
                 cargos: is_array($this->params->get("cargos")) ? $this->params->get("cargos") : []
+            )
+        );
+    }
+
+    #[Route(path: '/api/app/user/social/red/add', name: 'api_app_user_social_red', methods: ['POST']), ApiAnnotation(secure: true)]
+    public function addSocialReds()
+    {
+        return $this->command->handle(
+            new SocialRedCommand(
+                id: Uuid::uuid4(),
+                urls: is_array($this->params->get('urls')) ? $this->params->get('urls') : [],
+                userId: $this->tokenManager->requestToken() ? $this->tokenManager->requestToken()->aud() : "",
             )
         );
     }

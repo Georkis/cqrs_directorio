@@ -9,6 +9,7 @@ use App\Domain\ValueObject\UserStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Groups;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -27,6 +28,8 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
     private UserStatus $status;
 
     private ?string $avatar = null;
+
+    private Collection $socialReds;
 
     /**
      * @return static
@@ -58,6 +61,27 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
     public function setCargos(Collection $cargos)
     {
         $this->cargos = $cargos;
+    }
+
+    public function addSocialReds(
+        UuidInterface $id,
+        string $url
+    )
+    {
+        //todo valid if user has the same url
+
+        $this->socialReds->add(
+            SocialRed::create(
+                id: $id,
+                url: $url,
+                user: $this
+            )
+        );
+    }
+
+    public function getSocialReds()
+    {
+        return $this->socialReds;
     }
 
     public function status(): UserStatus

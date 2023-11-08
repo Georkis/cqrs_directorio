@@ -26,5 +26,11 @@
                 <cascade-remove />
             </cascade>
         </many-to-many>
+        <one-to-many field="socialReds" target-entity="App\Domain\Entity\SocialRed" mapped-by="user">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

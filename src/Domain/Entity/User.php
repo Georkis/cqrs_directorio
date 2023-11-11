@@ -31,6 +31,8 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
 
     private Collection $socialReds;
 
+    private Collection $phones;
+
     /**
      * @return static
      */
@@ -151,5 +153,10 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
     public function avatar(): ?string
     {
         return $this->avatar;
+    }
+
+    public function phones()
+    {
+        return $this->phones;
     }
 }

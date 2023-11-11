@@ -32,5 +32,11 @@
                 <cascade-remove />
             </cascade>
         </one-to-many>
+        <one-to-many field="phones" target-entity="Phone" mapped-by="user">
+            <cascade>
+                <cascade-remove />
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

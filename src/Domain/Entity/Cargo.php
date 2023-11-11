@@ -13,8 +13,6 @@ class Cargo extends AbstractUuidEntity
     protected ?string $createdClassEvent = CargoCreated::class;
     protected ?string $updatedClassEvent = CargoUpdated::class;
 
-    protected UuidInterface $id;
-
     protected string $name;
 
     protected Collection $users;

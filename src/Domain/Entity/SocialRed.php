@@ -6,8 +6,6 @@ use Ramsey\Uuid\UuidInterface;
 
 class SocialRed extends AbstractUuidEntity
 {
-    protected UuidInterface $id;
-
     protected string $url;
 
     protected User $user;
@@ -24,7 +22,7 @@ class SocialRed extends AbstractUuidEntity
         return $e;
     }
 
-    public function url(): string
+        public function url(): string
     {
         return $this->url;
     }

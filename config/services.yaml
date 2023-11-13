@@ -7,6 +7,7 @@ parameters:
   APP_ENV: '%env(resolve:APP_ENV)%'
   APP_TIMEZONE: '%env(APP_TIMEZONE)%'
   TEMP_DIR: '%env(string:TEMP_DIR)%'
+  PUBLIC_IMAGES_AVATAR: '%kernel.project_dir%/public/images/avatar/'
   AMQP_HOST: '%env(resolve:AMQP_HOST)%'
   AMQP_PORT: '%env(resolve:AMQP_PORT)%'
   AMQP_USER: '%env(resolve:AMQP_USER)%'

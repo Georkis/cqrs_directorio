@@ -14,12 +14,14 @@ class Phone extends AbstractUuidEntity
     public static function create(
         UuidInterface $id,
         string $prefixNumber,
-        string $number
+        string $number,
+        User $user
     )
     {
         $e = new static($id);
         $e->prefix_number = $prefixNumber;
         $e->number =  $number;
+        $e->user = $user;
 
         return $e;
     }

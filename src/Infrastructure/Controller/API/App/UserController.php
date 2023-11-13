@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractAPIController
 {
-    #[Route('/api/app/user/register', name: 'app_user_register', methods: ['POST'])]
+    #[Route(path: '/api/app/user/register', name: 'app_user_register', methods: ['POST']), ApiAnnotation(secure: true)]
     public function create(): Response
     {
         return $this->command->handle(
@@ -30,7 +30,8 @@ class UserController extends AbstractAPIController
                 birthdate: (string)$this->params->get("birthdate"),
                 gender: (string)$this->params->get("gender"),
                 cargos: (array)$this->params->get("cargos"),
-                avatar: (string)$this->params->get("avatar")
+                avatar: (string)$this->params->get("avatar"),
+                phones: $this->params->get("phones") ?? []
             )
         );
     }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Exceptions\Docs;
 
+use App\Application\Exception\PhoneIsExistException;
 use App\Application\Exception\SocialRedIsExistException;
 use App\Application\Exception\UserEmailAlreadyRegisteredException;
 use App\Application\Exception\UserNotAccessException;
@@ -35,6 +36,12 @@ class UserExceptionsDocs extends AbstractDocsExceptions
             classname: SocialRedIsExistException::class,
             status: Response::HTTP_UNPROCESSABLE_ENTITY,
             description: "Social red is exist!"
+        );
+
+        $this->addError(
+            classname: PhoneIsExistException::class,
+            status: Response::HTTP_UNPROCESSABLE_ENTITY,
+            description: "This phone es used by another user!"
         );
     }
 

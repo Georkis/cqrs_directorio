@@ -7,6 +7,10 @@ services:
     arguments:
       $bucket: '%env(string:AWS_S3_BUCKET)%'
       $tmpFolder: '%env(string:TMP_FOLDER)%'
+  App\Domain\Manager\UploadFileManagerLocal:
+    class: App\Infrastructure\Manager\UploadFileLocal
+    arguments:
+      $folderAvatar: '%PUBLIC_IMAGES_AVATAR%'
 
   App\Domain\Manager\TokenManager:
     class: App\Infrastructure\Manager\JWTTokenManager

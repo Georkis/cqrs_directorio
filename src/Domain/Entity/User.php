@@ -27,7 +27,7 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
     private ?Collection $cargos;
     private UserStatus $status;
 
-    private ?string $avatar = null;
+    private ?string $avatar;
 
     private Collection $socialReds;
 
@@ -44,7 +44,7 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
         Gender $gender,
         \DateTimeImmutable $birthdate,
         Collection $cargos,
-        string $avatar,
+        ?string $avatar,
     ): self
     {
         $e = new static($id);
@@ -56,13 +56,32 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
         $e->password = "";
         $e->cargos = new ArrayCollection();
         $e->setCargos($cargos);
-        $e->avatar = null;
+        $e->avatar = ! empty($avatar) ? $avatar : null;
+
         return $e;
     }
 
-    public function setCargos(Collection $cargos)
+    public function setCargos(Collection $cargos): void
     {
         $this->cargos = $cargos;
+    }
+
+    public function setPhones(array $phones): void
+    {
+        $p = new ArrayCollection();
+
+        foreach ($phones as $phone){
+            $p->add(
+                Phone::create(
+                    id: Uuid::uuid4(),
+                    prefixNumber: $phone['prefixNumber'],
+                    number: $phone['number'],
+                    user: $this
+                )
+            );
+        }
+
+        $this->phones = $p;
     }
 
     public function addSocialReds(
@@ -150,7 +169,7 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
         $this->cargos;
     }
 
-    public function avatar(): ?string
+    public function avatar(): string
     {
         return $this->avatar;
     }

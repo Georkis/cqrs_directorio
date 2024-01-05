@@ -9,6 +9,7 @@ use App\Application\Query\User\GetUser\GetUserCommand;
 use App\Application\Query\User\LoginUser\LoginUserCommand;
 use App\Application\Service\User\RegisterUser\RegisterUserCommand;
 use App\Application\Service\User\ResetPasswordUser\ResetPasswordUserCommand;
+use App\Application\Service\User\AddPhones\AddPhonesCommand;
 use App\Application\Service\User\UpdateUserCargos\UpdateUserCargosCommand;
 use App\Infrastructure\Annotations\ApiAnnotation;
 use App\Infrastructure\Controller\API\AbstractAPIController;
@@ -117,5 +118,16 @@ class UserController extends AbstractAPIController
     public function infoUser(): void
     {
         //todo
+    }
+
+    #[Route(path: "/api/app/user/update-phone", name: "api_app_user_update_phone", methods: ["POST"]), ApiAnnotation(secure: true)]
+    public function updatePhone()
+    {
+        return $this->command->handle(
+            new AddPhonesCommand(
+                id: $this->tokenManager->requestToken() ? Uuid::fromString($this->tokenManager->requestToken()->aud()) : "",
+                phones: is_array($this->params->get('phones')) ? $this->params->get('phones') : []
+            )
+        );
     }
 }

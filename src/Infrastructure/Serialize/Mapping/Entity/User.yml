@@ -16,3 +16,5 @@ App\Domain\Entity\User:
       inline: true
     cargos:
       groups: [ default ]
+    phones:
+      groups: [ default ]

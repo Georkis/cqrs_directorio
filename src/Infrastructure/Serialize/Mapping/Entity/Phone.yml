@@ -1,0 +1,9 @@
+App\Domain\Entity\Phone:
+  exclusion_policy: ALL
+  properties:
+    prefix_number:
+      groups: [ default ]
+    number:
+      groups: [ default ]
+    name:
+      groups: [ default ]

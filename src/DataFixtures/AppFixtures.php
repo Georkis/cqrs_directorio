@@ -59,6 +59,7 @@ class AppFixtures extends Fixture
             gender: Gender::create(gender: "MALE"),
             email: "georkis@gmail.com",
             cargos: $r,
+            avatar: null
         );
 
         $password = $this->passwordHasher->hashPassword($user, '123456');

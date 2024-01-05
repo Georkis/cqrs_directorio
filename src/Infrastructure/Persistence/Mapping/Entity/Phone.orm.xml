@@ -5,6 +5,7 @@
             repository-class="App\Infrastructure\Repository\DoctrinePhoneRepository">
         <field name="prefix_number" nullable="true" type="string" />
         <field name="number" type="string" nullable="true" unique="true" />
+        <field name="name" type="string" unique="true" />
         <many-to-one field="user" target-entity="App\Domain\Entity\User" inversed-by="phones" />
     </entity>
 </doctrine-mapping>

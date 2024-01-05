@@ -8,7 +8,6 @@ use App\Domain\ValueObject\Gender;
 use App\Domain\ValueObject\UserStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JMS\Serializer\Annotation\Groups;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -76,7 +75,8 @@ class User extends AbstractUuidEntity implements PasswordAuthenticatedUserInterf
                     id: Uuid::uuid4(),
                     prefixNumber: $phone['prefixNumber'],
                     number: $phone['number'],
-                    user: $this
+                    user: $this,
+                    name: $phone['name']
                 )
             );
         }
